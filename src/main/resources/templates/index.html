@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type = "text/javascript">  
+        function changeColor() {   
+            var rnd = Math.floor(Math.random() * 3);
+            var color = "";
+            switch (rnd) {
+                case 0:
+                    color = "green";
+                    break;
+                case 1:
+                    color = "red";
+                    break;
+                case 2:
+                    color = "blue";
+                    break;
+            }
+            var path = "/images/sample-" + color + "-100x75.png";
+            console.log("Updating image to: '" + path + "'");
+            document.getElementById("colorImage").src = path;
+        }
+    </script>
+    <script>
+        async function updateNumber(file) {
+            let myObject = await fetch(file);
+            let myText = await myObject.text();
+            let status = await myObject.status;
+            document.getElementById("randomNumber").innerHTML = status + ": " + myText;
+        }
+    </script>
+    <script>
+        function eraseCookie(name) {
+            document.cookie = name + '=; Max-Age=0'
+        }
+
+        function invalidateCookie(name) {
+            document.cookie = name + '=false;'
+        }
+    </script>
+</head>
+<body>
+    <div>
+        Test Image: <img id="colorImage" src="/images/sample-red-100x75.png" />
+        <a href="#" onclick="changeColor();return false;">Update Image</a>
+    </div>
+    <div>
+        <a href="#" onclick="updateNumber('/getnum');return false;">Update number:</a> <span id="randomNumber">5</span>
+    </div>
+
+    <span th:if="${greeting.name != null and greeting.content != null}">
+        <h1>Message</h1>
+        <p th:text="${greeting.name} + ': ' +  ${greeting.content}" />
+    </span>
+
+    <h1>Form</h1>
+    <form action="#" th:action="@{/}" th:object="${greeting}" method="post">
+    	<p>Name: <input type="text" th:field="*{name}" /></p>
+        <p>Message: <input type="text" th:field="*{content}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+    <div>
+        <a href="#" onclick="eraseCookie('dc_cookie');return false;">Delete cookie</a> 
+        <a href="#" onclick="invalidateCookie('dc_cookie');return false;">Invalidate cookie</a> 
+    </div>
+</body>
+</html>
